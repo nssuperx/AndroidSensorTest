@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RotationTest</string>
+    <string name="text">Hello world!</string>
 </resources>
