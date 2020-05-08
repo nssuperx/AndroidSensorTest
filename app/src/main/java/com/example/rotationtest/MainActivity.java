@@ -18,7 +18,9 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private TextView textViewGyro, textViewAccel, textInfoGyro, textInfoAccel;
+    private TextView textViewGyro, textViewAccel, textInfoGyro, textInfoAccel, textViewDegree;
+    private float degreeX, degreeY, degreeZ;
+    private long preTimeStamp = 0;
 
     // onCreate　Activity生成時 初期化
     @Override
@@ -34,11 +36,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         textViewGyro = findViewById(R.id.text_gyro);
         textInfoAccel = findViewById(R.id.text_info_accel);
         textViewAccel = findViewById(R.id.text_accel);
+        textViewDegree = findViewById(R.id.text_degree);
     }
 
     // onResume Activity表示時
     @Override
     protected void onResume() {
+        degreeX = 0.0f;
+        degreeY = 0.0f;
+        degreeZ = 0.0f;
 
         super.onResume();
 
@@ -78,12 +84,22 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float sensorX = event.values[0];
             float sensorY = event.values[1];
             float sensorZ = event.values[2];
+            long timeStamp = event.timestamp;
+            float dt = (float) (timeStamp - preTimeStamp) * (float) Math.pow(10, -9);
+            preTimeStamp = timeStamp;
 
-            String strSensorValue = String.format(Locale.US, "gyroscope:\n" + "X: %f\nY: %f\nZ: %f\n", sensorX, sensorY, sensorZ);
+            degreeX += sensorX * dt;
+            degreeY += sensorY * dt;
+            degreeZ += sensorZ * dt;
+
+            String strSensorValue = String.format(Locale.US, "gyroscope:\n" + "X: %f\nY: %f\nZ: %f\n timestamp: %d\n dt: %f\n", sensorX, sensorY, sensorZ, timeStamp, dt);
+            String strDegreeValue = String.format(Locale.US, "degree:\n" + "X: %f\nY: %f\nZ: %f\n", degreeX, degreeY, degreeZ);
 
             textViewGyro.setText(strSensorValue);
+            textViewDegree.setText(strDegreeValue);
 
             showInfo(event);
+
         }
 
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
