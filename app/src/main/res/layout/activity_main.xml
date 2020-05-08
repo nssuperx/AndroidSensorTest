@@ -5,13 +5,25 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/text_info"
+        android:id="@+id/text_info_gyro"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/text" />
 
     <TextView
-        android:id="@+id/text_view"
+        android:id="@+id/text_gyro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text" />
+
+    <TextView
+        android:id="@+id/text_info_accel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text" />
+
+    <TextView
+        android:id="@+id/text_accel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/text" />

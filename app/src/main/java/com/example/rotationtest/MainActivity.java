@@ -18,7 +18,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private TextView textView, textInfo;
+    private TextView textViewGyro, textViewAccel, textInfoGyro, textInfoAccel;
 
     // onCreate　Activity生成時 初期化
     @Override
@@ -30,8 +30,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         // インスタンス取得
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-        textInfo = findViewById(R.id.text_info);
-        textView = findViewById(R.id.text_view);
+        textInfoGyro = findViewById(R.id.text_info_gyro);
+        textViewGyro = findViewById(R.id.text_gyro);
+        textInfoAccel = findViewById(R.id.text_info_accel);
+        textViewAccel = findViewById(R.id.text_accel);
     }
 
     // onResume Activity表示時
@@ -41,25 +43,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
 
         Sensor gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        //Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         // ジャイロスコープなかった時の処理
         if(gyro != null){
             sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_UI);
         }else{
             String ns = "No Support";
-            textView.setText(ns);
+            textViewGyro.setText(ns);
         }
 
-        /*
+
         if(accel != null){
             sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
         }else{
             String ns = "No Support";
-            textView.setText(ns);
+            textViewAccel.setText(ns);
         }
-
-         */
     }
 
     // onPause
@@ -81,7 +81,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             String strSensorValue = String.format(Locale.US, "gyroscope:\n" + "X: %f\nY: %f\nZ: %f\n", sensorX, sensorY, sensorZ);
 
-            textView.setText(strSensorValue);
+            textViewGyro.setText(strSensorValue);
+
+            showInfo(event);
+        }
+
+        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            float sensorX = event.values[0];
+            float sensorY = event.values[1];
+            float sensorZ = event.values[2];
+
+            String strSensorValue = String.format(Locale.US, "accelerometer:\n" + "X: %f\nY: %f\nZ: %f\n", sensorX, sensorY, sensorZ);
+
+            textViewAccel.setText(strSensorValue);
 
             showInfo(event);
         }
@@ -147,7 +159,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         info.append(String.valueOf(fData));
         info.append(" mA\n");
 
-        textInfo.setText(info);
+        if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+            textInfoGyro.setText(info);
+        }
+
+        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+            textInfoAccel.setText(info);
+        }
+
     }
 
     @Override
