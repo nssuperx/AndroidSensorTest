@@ -60,6 +60,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/text" />
+
+            <TextView
+                android:id="@+id/text_euler"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text" />
+
+            <TextView
+                android:id="@+id/text_info_magnetic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text" />
+
+            <TextView
+                android:id="@+id/text_magnetic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text" />
+
+            <TextView
+                android:id="@+id/text_deg_acc_mag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

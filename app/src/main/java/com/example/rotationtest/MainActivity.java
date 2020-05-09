@@ -18,9 +18,13 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private TextView textViewGyro, textViewAccel, textInfoGyro, textInfoAccel, textViewDegree, textViewDistance, textViewRotVec, textInfoRotVec;
+    private TextView textViewGyro, textViewAccel, textInfoGyro, textInfoAccel, textViewDegree, textViewDistance, textViewRotVec, textInfoRotVec, textViewEuler, textInfoMagnetic, textViewMagnetic, textViewDegAccMag;
     private float degreeX, degreeY, degreeZ, distanceX, distanceY, distanceZ;
     private long preTimeStamp = 0;
+    float[] rotationMatrix = new float[9];
+    float[] acceler = new float[3];
+    float[] magnetic = new float[3];
+    float[] degree = new float[3];
 
     // onCreate　Activity生成時 初期化
     @Override
@@ -40,6 +44,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         textViewDistance = findViewById(R.id.text_distance);
         textInfoRotVec = findViewById(R.id.text_info_vector);
         textViewRotVec = findViewById(R.id.text_vector);
+        textViewEuler = findViewById(R.id.text_euler);
+        textInfoMagnetic = findViewById(R.id.text_info_magnetic);
+        textViewMagnetic = findViewById(R.id.text_magnetic);
+        textViewDegAccMag = findViewById(R.id.text_deg_acc_mag);
     }
 
     // onResume Activity表示時
@@ -56,9 +64,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
 
         Sensor gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        //Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         Sensor rot_vec = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        //Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        Sensor magnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         // gs03 u9200 no support
         //Sensor gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
@@ -86,6 +95,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             String ns = "No Support";
             textViewRotVec.setText(ns);
         }
+
+        if(magnetic != null){
+            sensorManager.registerListener(this, magnetic, SensorManager.SENSOR_DELAY_UI);
+        }else{
+            String ns = "No Support";
+            textViewMagnetic.setText(ns);
+        }
     }
 
     // onPause
@@ -109,34 +125,36 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float dt = (float) (timeStamp - preTimeStamp) * (float) Math.pow(10, -9);
             preTimeStamp = timeStamp;
 
-            degreeX += sensorX;
-            degreeY += sensorY;
-            degreeZ += sensorZ;
+//            degreeX += sensorX;
+//            degreeY += sensorY;
+//            degreeZ += sensorZ;
 
             String strSensorValue = String.format(Locale.US, "gyroscope:\n" + "X: %f\nY: %f\nZ: %f\ntimestamp: %d\ndt: %f\n", sensorX, sensorY, sensorZ, timeStamp, dt);
-            String strDegreeValue = String.format(Locale.US, "degree:\n" + "X: %f\nY: %f\nZ: %f\n", degreeX, degreeY, degreeZ);
+//            String strDegreeValue = String.format(Locale.US, "degree:\n" + "X: %f\nY: %f\nZ: %f\n", degreeX, degreeY, degreeZ);
 
             textViewGyro.setText(strSensorValue);
-            textViewDegree.setText(strDegreeValue);
+//            textViewDegree.setText(strDegreeValue);
 
             showInfo(event);
 
         }
 
-        if(event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION){
+        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
             float sensorX = event.values[0];
             float sensorY = event.values[1];
             float sensorZ = event.values[2];
 
-            distanceX += sensorX;
-            distanceY += sensorY;
-            distanceZ += sensorZ;
+            acceler = event.values.clone();
+
+//            distanceX += sensorX;
+//            distanceY += sensorY;
+//            distanceZ += sensorZ;
 
             String strSensorValue = String.format(Locale.US, "accelerometer:\n" + "X: %f\nY: %f\nZ: %f\n", sensorX, sensorY, sensorZ);
-            String strDistanceValue = String.format(Locale.US, "distance:\n" + "X: %f\nY: %f\nZ: %f\n", distanceX, distanceY, distanceZ);
+//            String strDistanceValue = String.format(Locale.US, "distance:\n" + "X: %f\nY: %f\nZ: %f\n", distanceX, distanceY, distanceZ);
 
             textViewAccel.setText(strSensorValue);
-            textViewDistance.setText(strDistanceValue);
+//            textViewDistance.setText(strDistanceValue);
 
             showInfo(event);
         }
@@ -145,13 +163,43 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float sensorX = event.values[0];
             float sensorY = event.values[1];
             float sensorZ = event.values[2];
-            float sensorS = event.values[3];
+            float sensorW = event.values[3];
 
-            String strSensorValue = String.format(Locale.US, "rotation_vector:\n" + "X: %f\nY: %f\nZ: %f\nS: %f\n", sensorX, sensorY, sensorZ, sensorS);
+            float[] quat = {sensorX, sensorY, sensorZ, sensorW};
+            float[] rm = new float[9];
+            float[] euler = new float[3];
+            SensorManager.getRotationMatrixFromVector(rm, quat);
+            SensorManager.getOrientation(rm, euler);
+
+
+            String strSensorValue = String.format(Locale.US, "rotation_vector:\n" + "X: %f\nY: %f\nZ: %f\nS: %f\n", sensorX, sensorY, sensorZ, sensorW);
+            String strEulerValue = String.format(Locale.US, "euler:\n" + "X: %f\nY: %f\nZ: %f\n", euler[0] * 180.0/Math.PI, euler[1] * 180.0/Math.PI, euler[2] * 180.0/Math.PI);
 
             textViewRotVec.setText(strSensorValue);
+            textViewEuler.setText(strEulerValue);
 
             showInfo(event);
+        }
+
+        if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+            float sensorX = event.values[0];
+            float sensorY = event.values[1];
+            float sensorZ = event.values[2];
+
+            magnetic = event.values.clone();
+
+            String strSensorValue = String.format(Locale.US, "rotation_vector:\n" + "X: %f\nY: %f\nZ: %f\n", sensorX, sensorY, sensorZ);
+
+            textViewMagnetic.setText(strSensorValue);
+
+            showInfo(event);
+        }
+
+        if(magnetic != null && acceler != null){
+            SensorManager.getRotationMatrix(rotationMatrix, null, acceler, magnetic);
+            SensorManager.getOrientation(rotationMatrix, degree);
+            String strDegreeValue = String.format(Locale.US, "degree:\n" + "X: %f\nY: %f\nZ: %f\n", degreeX, degreeY, degreeZ);
+            textViewDegAccMag.setText(strDegreeValue);
         }
     }
 
@@ -225,6 +273,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR){
             textInfoRotVec.setText(info);
+        }
+
+        if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+            textInfoMagnetic.setText(info);
         }
     }
 
