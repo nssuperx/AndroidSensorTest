@@ -16,74 +16,62 @@
             <TextView
                 android:id="@+id/text_info_gyro"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/text_gyro"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/text_degree"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/text_info_accel"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/text_accel"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/text_distance"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/text_info_vector"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/text_vector"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/text_euler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/text_info_magnetic"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/text_magnetic"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/text_deg_acc_mag"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/text" />
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
