@@ -5,13 +5,13 @@ import android.widget.TextView;
 
 import java.util.Locale;
 
-public class MagneticFieldSensor {
+public class GravitySensor {
     public static void viewValue(SensorEvent event, TextView textView){
         float sensorX = event.values[0];
         float sensorY = event.values[1];
         float sensorZ = event.values[2];
 
-        String strSensorValue = String.format(Locale.US, "magnetic_field:\n" + "X: %f\nY: %f\nZ: %f\n", sensorX, sensorY, sensorZ);
+        String strSensorValue = String.format(Locale.US, "gravity:\n" + "X: %f\nY: %f\nZ: %f\n", sensorX, sensorY, sensorZ);
 
         textView.setText(strSensorValue);
     }

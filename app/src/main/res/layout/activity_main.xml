@@ -24,6 +24,16 @@
                 android:layout_height="wrap_content" />
 
             <TextView
+                android:id="@+id/text_info_gravity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/text_gravity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
                 android:id="@+id/text_degree"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -70,6 +80,11 @@
 
             <TextView
                 android:id="@+id/text_deg_acc_mag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/text_deg_gra_mag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
         </LinearLayout>
