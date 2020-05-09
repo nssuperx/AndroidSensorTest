@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if(magnetic != null && acceler != null){
             SensorManager.getRotationMatrix(rotationMatrix, null, acceler, magnetic);
             SensorManager.getOrientation(rotationMatrix, degree);
-            String strDegreeValue = String.format(Locale.US, "degree:\n" + "X: %f\nY: %f\nZ: %f\n", degreeX, degreeY, degreeZ);
+            String strDegreeValue = String.format(Locale.US, "degree:\n" + "X: %f\nY: %f\nZ: %f\n", degree[0], degree[1], degree[2]);
             textViewDegAccMag.setText(strDegreeValue);
         }
     }
