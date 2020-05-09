@@ -18,8 +18,8 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private TextView textViewGyro, textViewAccel, textInfoGyro, textInfoAccel, textViewDegree;
-    private float degreeX, degreeY, degreeZ;
+    private TextView textViewGyro, textViewAccel, textInfoGyro, textInfoAccel, textViewDegree, textViewDistance;
+    private float degreeX, degreeY, degreeZ, distanceX, distanceY, distanceZ;
     private long preTimeStamp = 0;
 
     // onCreate　Activity生成時 初期化
@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         textInfoAccel = findViewById(R.id.text_info_accel);
         textViewAccel = findViewById(R.id.text_accel);
         textViewDegree = findViewById(R.id.text_degree);
+        textViewDistance = findViewById(R.id.text_distance);
     }
 
     // onResume Activity表示時
@@ -46,10 +47,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         degreeY = 0.0f;
         degreeZ = 0.0f;
 
+        distanceX = 0.0f;
+        distanceY = 0.0f;
+        distanceZ = 0.0f;
+
         super.onResume();
 
         Sensor gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+
+        // gs03 u9200 no support
+        //Sensor gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
+        //Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED);
 
         // ジャイロスコープなかった時の処理
         if(gyro != null){
@@ -61,7 +70,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
         if(accel != null){
-            sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
+            sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_UI);
         }else{
             String ns = "No Support";
             textViewAccel.setText(ns);
@@ -84,15 +93,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             float sensorX = event.values[0];
             float sensorY = event.values[1];
             float sensorZ = event.values[2];
+
             long timeStamp = event.timestamp;
             float dt = (float) (timeStamp - preTimeStamp) * (float) Math.pow(10, -9);
             preTimeStamp = timeStamp;
 
-            degreeX += sensorX * dt;
-            degreeY += sensorY * dt;
-            degreeZ += sensorZ * dt;
+            degreeX += sensorX;
+            degreeY += sensorY;
+            degreeZ += sensorZ;
 
-            String strSensorValue = String.format(Locale.US, "gyroscope:\n" + "X: %f\nY: %f\nZ: %f\n timestamp: %d\n dt: %f\n", sensorX, sensorY, sensorZ, timeStamp, dt);
+            String strSensorValue = String.format(Locale.US, "gyroscope:\n" + "X: %f\nY: %f\nZ: %f\ntimestamp: %d\ndt: %f\n", sensorX, sensorY, sensorZ, timeStamp, dt);
             String strDegreeValue = String.format(Locale.US, "degree:\n" + "X: %f\nY: %f\nZ: %f\n", degreeX, degreeY, degreeZ);
 
             textViewGyro.setText(strSensorValue);
@@ -102,14 +112,20 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         }
 
-        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+        if(event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION){
             float sensorX = event.values[0];
             float sensorY = event.values[1];
             float sensorZ = event.values[2];
 
+            distanceX += sensorX;
+            distanceY += sensorY;
+            distanceZ += sensorZ;
+
             String strSensorValue = String.format(Locale.US, "accelerometer:\n" + "X: %f\nY: %f\nZ: %f\n", sensorX, sensorY, sensorZ);
+            String strDistanceValue = String.format(Locale.US, "distance:\n" + "X: %f\nY: %f\nZ: %f\n", distanceX, distanceY, distanceZ);
 
             textViewAccel.setText(strSensorValue);
+            textViewDistance.setText(strDistanceValue);
 
             showInfo(event);
         }
@@ -179,7 +195,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             textInfoGyro.setText(info);
         }
 
-        if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
+        if(event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION){
             textInfoAccel.setText(info);
         }
 
