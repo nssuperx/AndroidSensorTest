@@ -18,7 +18,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private TextView textViewGyro, textViewAccel, textInfoGyro, textInfoAccel, textViewDegree, textViewDistance;
+    private TextView textViewGyro, textViewAccel, textInfoGyro, textInfoAccel, textViewDegree, textViewDistance, textViewRotVec, textInfoRotVec;
     private float degreeX, degreeY, degreeZ, distanceX, distanceY, distanceZ;
     private long preTimeStamp = 0;
 
@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         textViewAccel = findViewById(R.id.text_accel);
         textViewDegree = findViewById(R.id.text_degree);
         textViewDistance = findViewById(R.id.text_distance);
+        textInfoRotVec = findViewById(R.id.text_info_vector);
+        textViewRotVec = findViewById(R.id.text_vector);
     }
 
     // onResume Activity表示時
@@ -55,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         Sensor gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        Sensor rot_vec = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        //Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         // gs03 u9200 no support
         //Sensor gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
@@ -74,6 +78,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }else{
             String ns = "No Support";
             textViewAccel.setText(ns);
+        }
+
+        if(rot_vec != null){
+            sensorManager.registerListener(this, rot_vec, SensorManager.SENSOR_DELAY_UI);
+        }else{
+            String ns = "No Support";
+            textViewRotVec.setText(ns);
         }
     }
 
@@ -126,6 +137,19 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
             textViewAccel.setText(strSensorValue);
             textViewDistance.setText(strDistanceValue);
+
+            showInfo(event);
+        }
+
+        if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR){
+            float sensorX = event.values[0];
+            float sensorY = event.values[1];
+            float sensorZ = event.values[2];
+            float sensorS = event.values[3];
+
+            String strSensorValue = String.format(Locale.US, "rotation_vector:\n" + "X: %f\nY: %f\nZ: %f\nS: %f\n", sensorX, sensorY, sensorZ, sensorS);
+
+            textViewRotVec.setText(strSensorValue);
 
             showInfo(event);
         }
@@ -199,6 +223,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             textInfoAccel.setText(info);
         }
 
+        if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR){
+            textInfoRotVec.setText(info);
+        }
     }
 
     @Override

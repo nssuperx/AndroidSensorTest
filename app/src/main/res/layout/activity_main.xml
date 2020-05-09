@@ -48,6 +48,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/text" />
+
+            <TextView
+                android:id="@+id/text_info_vector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text" />
+
+            <TextView
+                android:id="@+id/text_vector"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/text" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
