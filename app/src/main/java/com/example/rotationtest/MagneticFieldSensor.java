@@ -7,12 +7,14 @@ import java.util.Locale;
 
 public class MagneticFieldSensor {
     public static void viewValue(SensorEvent event, TextView textView){
+        StringBuffer sensorValue = new StringBuffer();
+        sensorValue.append(ShowSensorInfo.showInfo(event));
         float sensorX = event.values[0];
         float sensorY = event.values[1];
         float sensorZ = event.values[2];
 
-        String strSensorValue = String.format(Locale.US, "magnetic_field:\n" + "X: %f\nY: %f\nZ: %f\n", sensorX, sensorY, sensorZ);
+        sensorValue.append(String.format(Locale.US, "magnetic_field:\n" + "X: %f\nY: %f\nZ: %f\n", sensorX, sensorY, sensorZ));
 
-        textView.setText(strSensorValue);
+        textView.setText(sensorValue);
     }
 }

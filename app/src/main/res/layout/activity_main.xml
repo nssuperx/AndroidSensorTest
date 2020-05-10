@@ -14,17 +14,12 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/text_info_gyro"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
                 android:id="@+id/text_gyro"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/text_info_gravity"
+                android:id="@+id/text_accel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -39,22 +34,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/text_info_accel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/text_accel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
                 android:id="@+id/text_distance"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/text_info_vector"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -65,11 +45,6 @@
 
             <TextView
                 android:id="@+id/text_euler"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/text_info_magnetic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
