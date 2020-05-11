@@ -1,0 +1,2 @@
+# AndroidSensorTest
+Androidでいろんなセンサーを使いたい
