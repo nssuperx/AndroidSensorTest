@@ -7,6 +7,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     float[] magnetic = new float[3];
     float[] gravi = new float[3];
     float[] degree = new float[3];
+
+    ViewSensorValue gyroValue, accelValue, rot_vecValue, magneticValue, gravityValue;
 
     // onCreate　Activity生成時 初期化
     @Override
@@ -76,7 +79,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         // ジャイロスコープなかった時の処理
         if(gyro != null){
-            sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_UI);
+            sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_NORMAL);
+            gyroValue = new ViewSensorValue();
         }else{
             String ns = "No Support";
             textViewGyro.setText(ns);
@@ -84,28 +88,32 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
         if(accel != null){
-            sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_UI);
+            sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
+            accelValue = new ViewSensorValue();
         }else{
             String ns = "No Support";
             textViewAccel.setText(ns);
         }
 
         if(rot_vec != null){
-            sensorManager.registerListener(this, rot_vec, SensorManager.SENSOR_DELAY_UI);
+            sensorManager.registerListener(this, rot_vec, SensorManager.SENSOR_DELAY_NORMAL);
+            rot_vecValue = new ViewSensorValue();
         }else{
             String ns = "No Support";
             textViewRotVec.setText(ns);
         }
 
         if(magnetic != null){
-            sensorManager.registerListener(this, magnetic, SensorManager.SENSOR_DELAY_UI);
+            sensorManager.registerListener(this, magnetic, SensorManager.SENSOR_DELAY_NORMAL);
+            magneticValue = new ViewSensorValue();
         }else{
             String ns = "No Support";
             textViewMagnetic.setText(ns);
         }
 
         if(gravity != null){
-            sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_UI);
+            sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_NORMAL);
+            gravityValue = new ViewSensorValue();
         }else{
             String ns = "No Support";
             textViewMagnetic.setText(ns);
@@ -130,26 +138,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
 
-            GyroSensor.viewValue(event, textViewGyro);
+            //GyroSensor.viewValue(event, textViewGyro);
+            gyroValue.viewValue(event, textViewGyro);
         }
 
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-            AccelerometerSensor.viewValue(event, textViewAccel);
-            acceler = event.values.clone();
+            //AccelerometerSensor.viewValue(event, textViewAccel);
+            accelValue.viewValue(event, textViewAccel);
+            //acceler = event.values.clone();
         }
 
         if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR){
-            RotationVectorSensor.viewValue(event, textViewRotVec);
+            //RotationVectorSensor.viewValue(event, textViewRotVec);
+            rot_vecValue.viewValue(event, textViewRotVec);
         }
 
         if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-            MagneticFieldSensor.viewValue(event, textViewMagnetic);
-            magnetic = event.values.clone();
+            //MagneticFieldSensor.viewValue(event, textViewMagnetic);
+            magneticValue.viewValue(event, textViewMagnetic);
+            //magnetic = event.values.clone();
         }
 
         if(event.sensor.getType() == Sensor.TYPE_GRAVITY){
-            GravitySensor.viewValue(event, textViewGravity);
-            gravi = event.values.clone();
+            //GravitySensor.viewValue(event, textViewGravity);
+            gravityValue.viewValue(event, textViewGravity);
+            //gravi = event.values.clone();
         }
 
 
