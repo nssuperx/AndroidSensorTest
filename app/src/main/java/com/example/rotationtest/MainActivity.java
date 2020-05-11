@@ -15,9 +15,9 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private TextView textViewGyro, textViewAccelerometer, textViewLiner, textViewRotVec, textViewMagnetic, textViewGravity;
+    private TextView textViewGyro, textViewAccelerometer, textViewLinear, textViewRotVec, textViewMagnetic, textViewGravity;
 
-    ViewSensorValue gyroValue, accelerometerValue, liner_accelerationValue, rot_vecValue, magneticValue, gravityValue;
+    ViewSensorValue gyroValue, accelerometerValue, linear_accelerationValue, rot_vecValue, magneticValue, gravityValue;
 
     // onCreate　Activity生成時 初期化
     @Override
@@ -30,8 +30,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         textViewGyro = findViewById(R.id.text_gyro);
-        textViewAccelerometer = findViewById(R.id.text_accel);
-        textViewLiner = findViewById(R.id.text_liner_accel);
+        textViewAccelerometer = findViewById(R.id.text_accelerometer);
+        textViewLinear = findViewById(R.id.text_linear);
         textViewRotVec = findViewById(R.id.text_vector);
         textViewMagnetic = findViewById(R.id.text_magnetic);
         textViewGravity = findViewById(R.id.text_gravity);
@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         Sensor gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
         Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        Sensor liner_acceleration = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        Sensor linear_acceleration = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         Sensor rot_vec = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         Sensor magnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         Sensor gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
@@ -68,11 +68,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             textViewAccelerometer.setText("No support");
         }
 
-        if(liner_acceleration != null){
-            sensorManager.registerListener(this, liner_acceleration, SensorManager.SENSOR_DELAY_NORMAL);
-            liner_accelerationValue = new ViewSensorValue();
+        if(linear_acceleration != null){
+            sensorManager.registerListener(this, linear_acceleration, SensorManager.SENSOR_DELAY_NORMAL);
+            linear_accelerationValue = new ViewSensorValue();
         }else{
-            textViewLiner.setText("No support");
+            textViewLinear.setText("No support");
         }
 
         if(rot_vec != null){
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
 
         if(event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION){
-            liner_accelerationValue.viewValue(event, textViewLiner);
+            linear_accelerationValue.viewValue(event, textViewLinear);
         }
 
         if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR){

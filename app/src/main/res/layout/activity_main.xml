@@ -19,12 +19,12 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/text_accel"
+                android:id="@+id/text_accelerometer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/text_liner_accel"
+                android:id="@+id/text_linear"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

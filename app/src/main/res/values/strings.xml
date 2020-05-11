@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">Sensor</string>
+    <string name="app_name">SensorTest</string>
     <string name="text">Hello world!</string>
 </resources>
