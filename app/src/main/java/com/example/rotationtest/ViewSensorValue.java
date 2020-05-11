@@ -6,9 +6,14 @@ import android.widget.TextView;
 import java.util.Locale;
 
 public class ViewSensorValue {
+    StringBuffer strSensorInfo;
     public void viewValue(SensorEvent event, TextView textView){
         StringBuffer strSensorValue = new StringBuffer();
-        strSensorValue.append(showInfo(event));
+        if(strSensorInfo == null){
+            strSensorInfo = new StringBuffer();
+            strSensorInfo = showInfo(event);
+        }
+        strSensorValue.append(strSensorInfo);
         float[] sensorValues = event.values.clone();
         for(int i=0; i<sensorValues.length; i++){
             strSensorValue.append(String.format(Locale.US, "value[%d]:%f\n", i, sensorValues[i]));
@@ -47,16 +52,16 @@ public class ViewSensorValue {
         // require API Level 21
         /*
         data = event.sensor.getReportingMode();
-        String stinfo = "unknown";
+        String strinfo = "unknown";
         if(data == 0){
-            stinfo = "REPORTING_MODE_CONTINUOUS";
+            strinfo = "REPORTING_MODE_CONTINUOUS";
         }else if(data == 1){
-            stinfo = "REPORTING_MODE_ON_CHANGE";
+            strinfo = "REPORTING_MODE_ON_CHANGE";
         }else if(data == 2){
-            stinfo = "REPORTING_MODE_ONE_SHOT";
+            strinfo = "REPORTING_MODE_ONE_SHOT";
         }
         info.append("ReportingMode: ");
-        info.append(stinfo);
+        info.append(strinfo);
         info.append("\n");
 
          */
