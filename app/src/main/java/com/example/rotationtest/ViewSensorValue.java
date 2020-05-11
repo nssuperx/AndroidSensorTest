@@ -32,14 +32,14 @@ public class ViewSensorValue {
 
         data = event.sensor.getMinDelay();
         info.append("MinDelay: ");
-        info.append(String.valueOf(data));
+        info.append(data);
         info.append("\n");
 
         // require API Level 21
         /*
         data = event.sensor.getMaxDelay();
         info.append("MaxDelay: ");
-        info.append(String.valueOf(data));
+        info.append(data);
         info.append("\n");
          */
 
@@ -63,17 +63,17 @@ public class ViewSensorValue {
 
         info.append("MaxRange: ");
         float fData = event.sensor.getMaximumRange();
-        info.append(String.valueOf(fData));
+        info.append(fData);
         info.append("\n");
 
         info.append("Resolution: ");
         fData = event.sensor.getResolution();
-        info.append(String.valueOf(fData));
+        info.append(fData);
         info.append(" m/s^2\n");
 
         info.append("Power: ");
         fData = event.sensor.getPower();
-        info.append(String.valueOf(fData));
+        info.append(fData);
         info.append(" mA\n");
 
         return info;

@@ -1,35 +1,23 @@
 package com.example.rotationtest;
 
-import android.app.Activity;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.Locale;
 
 // 参考ページ: https://akira-watson.com/android/gyroscope.html
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
     private SensorManager sensorManager;
-    private TextView textViewGyro, textViewAccel, textViewDegree, textViewDistance, textViewRotVec,
-            textViewEuler, textViewMagnetic, textViewDegAccMag,textViewGravity, textViewDegGraMag;
-    private float degreeX, degreeY, degreeZ, distanceX, distanceY, distanceZ;
-    private long preTimeStamp = 0;
-    float[] rotationMatrix = new float[9];
-    float[] acceler = new float[3];
-    float[] magnetic = new float[3];
-    float[] gravi = new float[3];
-    float[] degree = new float[3];
+    private TextView textViewGyro, textViewAccelerometer, textViewLiner, textViewRotVec, textViewMagnetic, textViewGravity;
 
-    ViewSensorValue gyroValue, accelValue, rot_vecValue, magneticValue, gravityValue;
+    ViewSensorValue gyroValue, accelerometerValue, liner_accelerationValue, rot_vecValue, magneticValue, gravityValue;
 
     // onCreate　Activity生成時 初期化
     @Override
@@ -42,81 +30,70 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
         textViewGyro = findViewById(R.id.text_gyro);
-        textViewAccel = findViewById(R.id.text_accel);
-        textViewDegree = findViewById(R.id.text_degree);
-        textViewDistance = findViewById(R.id.text_distance);
+        textViewAccelerometer = findViewById(R.id.text_accel);
+        textViewLiner = findViewById(R.id.text_liner_accel);
         textViewRotVec = findViewById(R.id.text_vector);
-        textViewEuler = findViewById(R.id.text_euler);
         textViewMagnetic = findViewById(R.id.text_magnetic);
-        textViewDegAccMag = findViewById(R.id.text_deg_acc_mag);
         textViewGravity = findViewById(R.id.text_gravity);
-        textViewDegGraMag = findViewById(R.id.text_deg_gra_mag);
     }
 
     // onResume Activity表示時
     @Override
     protected void onResume() {
-        degreeX = 0.0f;
-        degreeY = 0.0f;
-        degreeZ = 0.0f;
-
-        distanceX = 0.0f;
-        distanceY = 0.0f;
-        distanceZ = 0.0f;
-
         super.onResume();
 
         Sensor gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        //Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+        Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        Sensor liner_acceleration = sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         Sensor rot_vec = sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         Sensor magnetic = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         Sensor gravity = sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY);
 
         // gs03 u9200 no support
         //Sensor gyro = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE_UNCALIBRATED);
-        //Sensor accel = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED);
+        //Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED);
 
         // ジャイロスコープなかった時の処理
         if(gyro != null){
             sensorManager.registerListener(this, gyro, SensorManager.SENSOR_DELAY_NORMAL);
             gyroValue = new ViewSensorValue();
         }else{
-            String ns = "No Support";
-            textViewGyro.setText(ns);
+            textViewGyro.setText("No support");
         }
 
-
-        if(accel != null){
-            sensorManager.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
-            accelValue = new ViewSensorValue();
+        if(accelerometer != null){
+            sensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            accelerometerValue = new ViewSensorValue();
         }else{
-            String ns = "No Support";
-            textViewAccel.setText(ns);
+            textViewAccelerometer.setText("No support");
+        }
+
+        if(liner_acceleration != null){
+            sensorManager.registerListener(this, liner_acceleration, SensorManager.SENSOR_DELAY_NORMAL);
+            liner_accelerationValue = new ViewSensorValue();
+        }else{
+            textViewLiner.setText("No support");
         }
 
         if(rot_vec != null){
             sensorManager.registerListener(this, rot_vec, SensorManager.SENSOR_DELAY_NORMAL);
             rot_vecValue = new ViewSensorValue();
         }else{
-            String ns = "No Support";
-            textViewRotVec.setText(ns);
+            textViewRotVec.setText("No support");
         }
 
         if(magnetic != null){
             sensorManager.registerListener(this, magnetic, SensorManager.SENSOR_DELAY_NORMAL);
             magneticValue = new ViewSensorValue();
         }else{
-            String ns = "No Support";
-            textViewMagnetic.setText(ns);
+            textViewMagnetic.setText("No support");
         }
 
         if(gravity != null){
             sensorManager.registerListener(this, gravity, SensorManager.SENSOR_DELAY_NORMAL);
             gravityValue = new ViewSensorValue();
         }else{
-            String ns = "No Support";
-            textViewMagnetic.setText(ns);
+            textViewMagnetic.setText("No support");
         }
     }
 
@@ -137,47 +114,42 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         Log.d("debug","onSensorChanged");
 
         if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-
-            //GyroSensor.viewValue(event, textViewGyro);
             gyroValue.viewValue(event, textViewGyro);
         }
 
         if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-            //AccelerometerSensor.viewValue(event, textViewAccel);
-            accelValue.viewValue(event, textViewAccel);
-            //acceler = event.values.clone();
+            accelerometerValue.viewValue(event, textViewAccelerometer);
+        }
+
+        if(event.sensor.getType() == Sensor.TYPE_LINEAR_ACCELERATION){
+            liner_accelerationValue.viewValue(event, textViewLiner);
         }
 
         if(event.sensor.getType() == Sensor.TYPE_ROTATION_VECTOR){
-            //RotationVectorSensor.viewValue(event, textViewRotVec);
             rot_vecValue.viewValue(event, textViewRotVec);
         }
 
         if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-            //MagneticFieldSensor.viewValue(event, textViewMagnetic);
             magneticValue.viewValue(event, textViewMagnetic);
-            //magnetic = event.values.clone();
         }
 
         if(event.sensor.getType() == Sensor.TYPE_GRAVITY){
-            //GravitySensor.viewValue(event, textViewGravity);
             gravityValue.viewValue(event, textViewGravity);
-            //gravi = event.values.clone();
         }
 
 
         // 参考ページ:https://developer.android.com/reference/android/hardware/SensorManager#getRotationMatrix(float[],%20float[],%20float[],%20float[])
         // ここの計算はパソコン側にやらせる。
         /*
-        if(magnetic != null && acceler != null){
-            SensorManager.getRotationMatrix(rotationMatrix, null, acceler, magnetic);
+        if(magnetic != null && accelerometer != null){
+            SensorManager.getRotationMatrix(rotationMatrix, null, accelerometer, magnetic);
             SensorManager.getOrientation(rotationMatrix, degree);
             String strDegreeValue = String.format(Locale.US, "accelerometer_degree:\n" + "X: %f\nY: %f\nZ: %f\n", degree[0] * (float) (180/Math.PI), degree[1] * (float) (180/Math.PI), degree[2] * (float) (180/Math.PI));
             textViewDegAccMag.setText(strDegreeValue);
         }
 
-        if(magnetic != null && gravi != null){
-            SensorManager.getRotationMatrix(rotationMatrix, null, gravi, magnetic);
+        if(magnetic != null && gravity != null){
+            SensorManager.getRotationMatrix(rotationMatrix, null, gravity, magnetic);
             SensorManager.getOrientation(rotationMatrix, degree);
             String strDegreeValue = String.format(Locale.US, "gravity_degree:\n" + "X: %f\nY: %f\nZ: %f\n", degree[0] * (float) (180/Math.PI), degree[1] * (float) (180/Math.PI), degree[2] * (float) (180/Math.PI));
             textViewDegGraMag.setText(strDegreeValue);
@@ -190,18 +162,4 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
-
-    // Hello world!!!
-    /*
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        TextView textview = findViewById(R.id.textView);
-        textview.setText(R.string.text);
-    }
-    */
-
-
 }
