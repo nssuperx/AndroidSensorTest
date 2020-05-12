@@ -1,6 +1,7 @@
 package com.example.rotationtest;
 
 import android.hardware.SensorEvent;
+import android.util.Log;
 import android.widget.TextView;
 
 import java.util.Locale;
@@ -22,6 +23,7 @@ public class ViewSensorValue {
     }
 
     public StringBuffer showInfo(SensorEvent event){
+        Log.d("debug","called showInfo");
         int data;
         StringBuffer info = new StringBuffer("Name: ");
         info.append(event.sensor.getName());

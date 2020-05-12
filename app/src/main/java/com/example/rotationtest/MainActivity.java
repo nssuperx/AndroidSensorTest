@@ -111,7 +111,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        Log.d("debug","onSensorChanged");
 
         if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
             gyroValue.viewValue(event, textViewGyro);
